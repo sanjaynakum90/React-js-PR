@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import TodoList from "./Components/TodoList";
-import TodoForm from "./Components/TodoForm";
+import React, { useState, useEffect } from 'react';
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
 
+function App() {
+    const [todos, setTodos] = useState(() => {
+        const saved = localStorage.getItem('todos');
+        return saved ? JSON.parse(saved) : [];
+    });
 
-export default function App() {
-    const [todos, setTodos] = useState([]);
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos]);
 
-    const addTodo = (title, description) => {
-        if (!title.trim()) return;
-        const newTodo = {
-            id: Date.now(),
-            title,
-            description,
-            completed: false,
-        };
-        setTodos([newTodo, ...todos]);
+    const addTodo = (text) => {
+        setTodos([...todos, { id: Date.now(), text, completed: false }]);
     };
 
-    const toggleComplete = (id) => {
+    const toggleTodo = (id) => {
         setTodos(todos.map(todo =>
             todo.id === id ? { ...todo, completed: !todo.completed } : todo
         ));
@@ -27,26 +26,13 @@ export default function App() {
         setTodos(todos.filter(todo => todo.id !== id));
     };
 
-    const updateTodo = (id, newTitle, newDescription) => {
-        setTodos(todos.map(todo =>
-            todo.id === id ? { ...todo, title: newTitle, description: newDescription } : todo
-        ));
-    };
-
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-            <div className="w-full max-w-md bg-white p-4 rounded shadow">
-                <h1 className="text-2xl font-bold mb-4 text-center">Simple ToDo App</h1>
-                <TodoForm addTodo={addTodo} />
-
-                <TodoList
-                    todos={todos}
-                    toggleComplete={toggleComplete}
-                    deleteTodo={deleteTodo}
-                    updateTodo={updateTodo}
-                />
-
-            </div>
+        <div className="container">
+            <h1 className="text-center mt-4">📝 To-Do List</h1>
+            <TodoForm addTodo={addTodo} />
+            <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
         </div>
     );
 }
+
+export default App;

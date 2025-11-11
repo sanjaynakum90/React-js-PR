@@ -1,38 +1,27 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-export default function TodoForm({ addTodo }) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+function TodoForm({ addTodo }) {
+  const [text, setText] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTodo(title, description);
-    setTitle("");
-    setDescription("");
+    if (!text.trim()) return;
+    addTodo(text);
+    setText('');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 mb-4">
+    <form onSubmit={handleSubmit} className="d-flex my-3">
       <input
         type="text"
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full border rounded px-3 py-2"
+        className="form-control me-2"
+        placeholder="Add a new task..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="w-full border rounded px-3 py-2"
-      />
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded"
-      >
-        Add Task
-      </button>
+      <button className="btn btn-primary">Add</button>
     </form>
   );
 }
+
+export default TodoForm;
