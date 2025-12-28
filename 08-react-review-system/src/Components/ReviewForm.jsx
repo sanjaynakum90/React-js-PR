@@ -1,72 +1,90 @@
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
+import React, { useEffect, useState } from "react";
+import { Container, Form, Button, Card } from "react-bootstrap";
 
-const ReviewForm = ({data}) => {
-  const [input, setInput] = useState({
-    name: "",
-    description: "",
-    rate: "",
-  });
-
-  const handleInputData = (identifier, e) => {
-    setInput((prev) => {
-      return {
-        ...prev,
-        [identifier]: e.target.value,
-      };
+const ReviewForm = ({ onSubmit, editItem }) => {
+    const [input, setInput] = useState({
+        name: "",
+        description: "",
+        rate: "",
     });
-  };
 
-  const handleSubmitData = (e) => {
-    e.preventDefault();
-    // console.log(input);
-    data(input);
-    setInput({ name: "", description: "", rate: "" });
-  };
-  return (
-    <>
-      <Container className="border mt-5 p-5 mb-5">
-        <Form onSubmit={handleSubmitData}>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Label>Your Name</Form.Label>
-            <Form.Control
-              className="w-50"
-              type="text"
-              placeholder="Enter Your Name"
-              onChange={(e) => handleInputData("name", e)}
-              value={input.name}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              className="w-50"
-              rows={3}
-              onChange={(e) => handleInputData("description", e)}
-              value={input.description}
-            />
-          </Form.Group>
-          <Form.Select
-            aria-label="Default select example"
-            value={input.rate}
-            onChange={(e) => handleInputData("rate", e)}
-            className="w-50 mb-3"
-          >
-            <option>Select Rating</option>
-            <option value="⭐">1</option>
-            <option value="⭐⭐">2</option>
-            <option value="⭐⭐⭐">3</option>
-            <option value="⭐⭐⭐⭐">4</option>
-            <option value="5⭐⭐⭐⭐⭐">5</option>
-          </Form.Select>
-          <Button type="submit">Submit</Button>
-        </Form>
-      </Container>
-    </>
-  );
+    useEffect(() => {
+        if (editItem) {
+            setInput(editItem);
+        }
+    }, [editItem]);
+
+    const handleChange = (field, e) => {
+        setInput({ ...input, [field]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (onSubmit && typeof onSubmit === "function") {
+            onSubmit(input);
+            setInput({ name: "", description: "", rate: "" });
+        } else {
+            console.error("onSubmit prop is required and must be a function");
+        }
+    };
+
+    return (
+        <Container className="my-4">
+            <Card className="shadow-sm">
+                <Card.Body>
+                    <Card.Title className="text-center mb-4">
+                        {editItem ? "Edit Review ✏️" : "Leave a Review ⭐"}
+                    </Card.Title>
+
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Your Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={input.name}
+                                onChange={(e) => handleChange("name", e)}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={input.description}
+                                onChange={(e) =>
+                                    handleChange("description", e)
+                                }
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-4">
+                            <Form.Label>Rating</Form.Label>
+                            <Form.Select
+                                value={input.rate}
+                                onChange={(e) => handleChange("rate", e)}
+                                required
+                            >
+                                <option value="">Select rating</option>
+                                <option value="⭐">1 ⭐</option>
+                                <option value="⭐⭐">2 ⭐⭐</option>
+                                <option value="⭐⭐⭐">3 ⭐⭐⭐</option>
+                                <option value="⭐⭐⭐⭐">4 ⭐⭐⭐⭐</option>
+                                <option value="⭐⭐⭐⭐⭐">5 ⭐⭐⭐⭐⭐</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Button type="submit" className="w-100">
+                            {editItem ? "Update Review" : "Submit Review"}
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </Container>
+    );
 };
 
 export default ReviewForm;
