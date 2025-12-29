@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
 
-const ReviewForm = ({ data, editItem }) => {
+const ReviewForm = ({ allData, editItem }) => {
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -21,7 +21,9 @@ const ReviewForm = ({ data, editItem }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        data(input);
+        allData(input
+
+        )
         setInput({ name: "", description: "", rate: "" });
 
     };
@@ -31,7 +33,7 @@ const ReviewForm = ({ data, editItem }) => {
             <Card className="shadow-sm">
                 <Card.Body>
                     <Card.Title className="text-center mb-4">
-                        {editItem ? "Edit Review ✏️" : "Leave a Review ⭐"}
+                        {editItem ? "Edit Review " : "Leave a Review "}
                     </Card.Title>
 
                     <Form onSubmit={handleSubmit}>
