@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReviewForm from "./ReviewForm";
 import ReviewList from "./ReviewList";
-import { Container } from "react-bootstrap";
+import  Container  from "react-bootstrap/Container";
 
 const ReviewContainer = () => {
     const [reviews, setReviews] = useState([]);

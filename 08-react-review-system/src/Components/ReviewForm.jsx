@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
 
-const ReviewForm = ({ onSubmit, editItem }) => {
+const ReviewForm = ({ data, editItem }) => {
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -21,12 +21,9 @@ const ReviewForm = ({ onSubmit, editItem }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (onSubmit && typeof onSubmit === "function") {
-            onSubmit(input);
-            setInput({ name: "", description: "", rate: "" });
-        } else {
-            console.error("onSubmit prop is required and must be a function");
-        }
+        data(input);
+        setInput({ name: "", description: "", rate: "" });
+
     };
 
     return (
